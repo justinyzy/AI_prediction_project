@@ -1,0 +1,76 @@
+syntax = "proto2";
+package protos;
+
+import "protos/csv_reader.proto";
+import "protos/model_input.proto";
+import "protos/act_function.proto";
+import "protos/train.proto";
+import "protos/ckpt_saver.proto";
+
+message MAIN_NN_R{
+    // Info for applying nn regression on heat and deformation
+    optional NN_H_D nn_hd_info = 1;
+}
+
+message NN_H_D {
+    // Set for model
+    required NN_model model_info     = 1;
+
+    // Set for dataset 
+    required CSV_Reader csv_info        = 2;
+
+    // Set for model input
+    required Model_input input_info     = 3;
+
+    // Set for training process
+    required Train_setting train_info   = 4;
+
+    // Set for evaluating
+    required Eva_Setting eva_info       = 5;
+
+    // Set for testing.
+    required Test_Setting test_info     = 6;
+
+    // Set for model saving
+    required CKPT_saver save_info       = 7;
+}
+
+message NN_model {
+    // Set number of layers to up sample
+    required int32 num_layers_up        = 1 [default = 0];
+
+    // Set for up sample scale
+    required int32 up_factor            = 2 [default = 0];
+
+    // Set number of layers to down sample
+    required int32 num_layers_down     = 3 [default = 0];
+
+    // Set for down sample scale
+    required int32 down_factor          = 4 [default = 0];
+
+    // Direct set nural list (layers, neurals)
+    optional Neural_L manual_network    = 5;
+
+    // Set for activate function
+    required Act_func act_info          = 6;
+}
+
+message Eva_Setting {
+    // How many steps to evaluate
+    required int32 step_to_eva = 1;
+
+    // Batch size to evaluate set -1 as all
+    required int32 batch_size  = 2;
+}
+
+message Test_Setting {
+    // How many steps to testing
+    required int32 step_to_test = 1;
+
+    // Batch size to test set -1 as all
+    required int32 batch_size   = 2;
+}
+
+message Neural_L {
+    repeated int32 neural_list  = 1;
+}

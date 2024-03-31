@@ -1,0 +1,1222 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ECB_src</name>
+    </assembly>
+    <members>
+        <member name="M:ECB_src.DataEncrypt.ArrayEncrypt.aesEncryptBase64(System.Byte[],System.String)">
+            <summary>
+            字串加密(非對稱式)
+            </summary>
+            <param name="SourceArray">加密前字串</param>
+            <param name="CryptoKey">加密金鑰</param>
+            <returns>加密後字串</returns>
+        </member>
+        <member name="M:ECB_src.DataEncrypt.ArrayEncrypt.aesDecryptBase64(System.Byte[],System.String)">
+            <summary>
+            字串解密(非對稱式)
+            </summary>
+            <param name="SourceArray">解密前字串</param>
+            <param name="CryptoKey">解密金鑰</param>
+            <returns>解密後字串</returns>
+        </member>
+        <member name="T:ECB_src.ECB">
+            <summary>
+            ECB類別
+            </summary>
+        </member>
+        <member name="E:ECB_src.ECB.Message">
+            <summary>
+            Occurs when a trace message is available.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB.PackQueue">
+            <summary>
+            Received packets queue
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB.PackSyncObj">
+            <summary>
+            Use to sync the <see cref="F:ECB_src.ECB.PackQueue"/>. Lock this variable before manipulate the <see cref="F:ECB_src.ECB.PackQueue"/>.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB.Client">
+            <summary>
+            TCP client object to comunicate with ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB.ModuleObj">
+            <summary>
+            After calling <see cref="M:ECB_src.ECB.GetModule"/>, module objects will be stored in this array. Your can control the module by this object.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB.availableTcs">
+            <summary>
+            Used to signal the waiting <see cref="M:ECB_src.ECB.WaitAsync(System.Threading.CancellationToken)"/> method.
+            Set when new data becomes availalble. Reset when the queue is empty.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB.getModuleTcs">
+            <summary>
+            Used to detect the <see cref="M:ECB_src.ECB.GetModule"/> method is complete.
+            Module object can be obtained by calling <see cref="F:ECB_src.ECB.getModuleTcs"/>.Task.Result
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB.cmdRespTcs">
+            <summary>
+            Used to detect the command trasnfer to ECB had been replied.
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.IP">
+            <summary>
+            ECB IP address, should be set to 192.168.10.10
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.Port">
+            <summary>
+            Port of ECB, should be set to 5001
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.isConnected">
+            <summary>
+            ECB connect status. True when ECB is connected.
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.isReconnected">
+            <summary>
+            ECB reconnected flag. True when ECB had reconnected.
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.isAcquring">
+            <summary>
+            ECB aquisition status. True when ECB is recording.
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.isFWUpdated">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.isFWUpdate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ECB_src.ECB.#ctor">
+            <summary>
+            Constructor of ECB class.
+            </summary>
+        </member>
+        <member name="M:ECB_src.ECB.Finalize">
+            <summary>
+            Destructor.
+            </summary>
+        </member>
+        <member name="M:ECB_src.ECB.delete">
+            <summary>
+            Destructor called by MATLAB
+            </summary>
+        </member>
+        <member name="M:ECB_src.ECB.RunAsync">
+            <summary>
+            Run a new task to handle the ECB communication.
+            </summary>
+            <returns><see cref="T:System.Threading.Tasks.Task"/> object of ECB.</returns>
+        </member>
+        <member name="M:ECB_src.ECB.Connect">
+            <summary>
+            Connect with ECB. <see cref="M:ECB_src.ECB.RunAsync"/> should be executed first.
+            </summary>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.GetModule">
+            <summary>
+            Get the modules connected on ECB. <see cref="M:ECB_src.ECB.RunAsync"/> and <see cref="M:ECB_src.ECB.Connect"/> should be executed first.
+            </summary>
+            <returns>Array object of ECB. Index 0 should be the bridge and followed by connected modules.</returns>
+        </member>
+        <member name="M:ECB_src.ECB.StartAcq(System.UInt32)">
+            <summary>
+            Start all modules to record data.
+            </summary>
+            <param name="sec">Time you want to record in second. Default is 0 which means no time limitation.</param>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.StopAcq">
+            <summary>
+            Stop aquisition.
+            </summary>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.OpenNewFW(System.String)">
+            <summary>
+            開啟韌體更新檔案
+            </summary>
+            <param name="path">韌體更新檔案路徑</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.UploadFW">
+            <summary>
+            上傳韌體至對應的模組
+            </summary>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.UpdateFW(ECB_src.Dests)">
+            <summary>
+            通知模組開始更新韌體
+            </summary>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.ExportConfig">
+            <summary>
+            Export the configuration file. You can reload the setting by <see cref="M:ECB_src.ECB.ImportConfig(System.Object[]@)"/>
+            </summary>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.ImportConfig(System.Object[]@)">
+            <summary>
+            Import the configuration file. This file can be found at ./Configuration.json.
+            </summary>
+            <param name="moduleObj">The variable you want to store module objects. If there has 2 modules on ECB, please create an object with 3 elements.(First one is for bridge.)</param>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.ImportConfig(System.Object[]@,System.String)">
+            <summary>
+            Import the configuration file. This file can be found at ./Configuration.json.
+            </summary>
+            <param name="moduleObj">The variable you want to store module objects. If there has 2 modules on ECB, please create an object with 3 elements.(First one is for bridge.)</param>
+            <param name="configString">Configuration context.</param>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.EnableInfluxDB">
+            <summary>
+            Upload data to InfluxDB. After calling this function, DO NOT call <see cref="M:ECB_src.EcbAcqModule.GetRecData"/> because all data is read and upload to InfluxDB.
+            </summary>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.WaitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Waits asynchronously until bytes are available.
+            </summary>
+            <param name="cancellationToken">A cancellation token used to propagate notification that
+              this operation should be canceled.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:ECB_src.ECB.SendPack(ECB_src.Cmds,ECB_src.Dests,System.Byte[],System.Threading.Tasks.TaskCompletionSource{ECB_src.Cmds})">
+            <summary>
+            Send package to ECB.
+            </summary>
+            <param name="cmd">Command type. Refer to <see cref="T:ECB_src.Cmds"/></param>
+            <param name="dest">Destination of the package. Refer to <see cref="T:ECB_src.Dests"/></param>
+            <param name="data">Data wants to send. null if no data needs to be send</param>
+            <param name="Tcs">If you want to know the package is send or not, create a <see cref="T:System.Threading.Tasks.TaskCompletionSource`1"/> as argument.</param>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.ECB.Reset(System.Threading.Tasks.TaskCompletionSource{System.Boolean}@)">
+            <summary>
+            Reset the task completion source. Must be called within the lock of <see cref="F:ECB_src.ECB.PackSyncObj"/>
+            </summary>
+            <param name="tcs">TCS you want to reset</param>
+            <returns>New TCS</returns>
+        </member>
+        <member name="M:ECB_src.ECB.Set(System.Threading.Tasks.TaskCompletionSource{System.Boolean})">
+            <summary>
+            Set the result of TCS. Must be called within the lock of <see cref="F:ECB_src.ECB.PackSyncObj"/>
+            </summary>
+            <param name="tcs">TCS you want to set</param>
+        </member>
+        <member name="M:ECB_src.ECB.AwaitAsync(System.Threading.Tasks.TaskCompletionSource{System.Boolean},System.Threading.CancellationToken)">
+            <summary>
+            Wait the TCS task complete. Must be called within the lock of <see cref="F:ECB_src.ECB.PackSyncObj"/>
+            </summary>
+            <param name="tcs">TCS you want to wait</param>
+            <param name="cancellationToken">timeout token</param>
+            <returns>Task object of this await</returns>
+        </member>
+        <member name="M:ECB_src.ECB.OnReceivedPackAsync">
+            <summary>
+            Received package callback function.
+            </summary>
+            <returns>Task object</returns>
+        </member>
+        <member name="T:ECB_src.ECB.ECBEventArgs">
+            <summary>
+            Provides data for the <see cref="P:ECB_src.ECB.ECBEventArgs.Message"/> event.
+            </summary>
+        </member>
+        <member name="M:ECB_src.ECB.ECBEventArgs.#ctor(System.String,System.Exception)">
+            <summary>
+            Initialises a new instance of the <see cref="T:ECB_src.ECB.ECBEventArgs"/> class.
+            </summary>
+            <param name="message">The trace message.</param>
+            <param name="exception">The exception that was thrown, if any.</param>
+        </member>
+        <member name="P:ECB_src.ECB.ECBEventArgs.Message">
+            <summary>
+            Gets the trace message.
+            </summary>
+        </member>
+        <member name="P:ECB_src.ECB.ECBEventArgs.Exception">
+            <summary>
+            Gets the exception that was thrown, if any.
+            </summary>
+        </member>
+        <member name="M:ECB_src.FW_INFO.#ctor(System.Byte[])">
+            <summary>
+            建立韌體資料物件，並給予加密過的韌體檔，此建構子會確認該韌體檔是否正確
+            </summary>
+            <param name="data">加密過的韌體檔內容</param>
+        </member>
+        <member name="T:ECB_src.Cmds">
+            <summary>
+            Command type of ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.RInfo">
+            <summary>
+            Read information from ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.WInfo">
+            <summary>
+            Write information to ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.AcqStart">
+            <summary>
+            Start aquisition.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.AcqStop">
+            <summary>
+            Stop aquisition.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.HWTrigger">
+            <summary>
+            Switch ECB to hardware trigger mode.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.SWTrigger">
+            <summary>
+            Switch ECB to software trigger mode.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.Reset">
+            <summary>
+            Reset bridge and modules.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.CheckConn">
+            <summary>
+            Check the connection with ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.UploadFirm">
+            <summary>
+            Upload new firmware to ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.UpgradeFirm">
+            <summary>
+            Inform ECB to upgrade firmware.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.WCalibration">
+            <summary>
+            Write calibration value to ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Cmds.SensorData">
+            <summary>
+            Receive sensor data from ECB.
+            </summary>
+        </member>
+        <member name="T:ECB_src.Dests">
+            <summary>
+            Destination of command.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Dests.Slot1">
+            <summary>
+            1st slot.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Dests.Slot2">
+            <summary>
+            2nd slot.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Dests.Slot3">
+            <summary>
+            3rd slot.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Dests.Slot4">
+            <summary>
+            4th slot.
+            </summary>
+        </member>
+        <member name="F:ECB_src.Dests.Bridge">
+            <summary>
+            Bridge.
+            </summary>
+        </member>
+        <member name="T:ECB_src.ECB_Errs">
+            <summary>
+            ECB error state.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.OK">
+            <summary>
+            OK.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.NoECB">
+            <summary>
+            There's no ECB.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.NoModules">
+            <summary>
+            There's no module(s).
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.Unconnected">
+            <summary>
+            ECB is not connected.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.PackErr">
+            <summary>
+            Package has some error.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.WrongArg">
+            <summary>
+            Argument(s) pass into method has some problem.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.Timeout">
+            <summary>
+            Timeout occured.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.NoConfigFile">
+            <summary>
+            There's no configuration file.
+            </summary>
+        </member>
+        <member name="F:ECB_src.ECB_Errs.Others">
+            <summary>
+            Others.
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule">
+            <summary>
+            Base class of ECB module.
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule.WriteInfo">
+            <summary>
+            Class of information needs to write to module.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.WriteInfo.ChEnabled">
+            <summary>
+            Channel(s) be enabled. Bit index means index of channel. Ex. 0x01 = channel 1 is enabled; 0x03 = channel 1 and 2 are enabled.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.WriteInfo.Resv1">
+            <summary>
+            Reserved.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.WriteInfo.Fs">
+            <summary>
+            Sampling frequency of module.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.WriteInfo.PreTrigger">
+            <summary>
+            PreTrigger number. If you want to pretrigger 1 second, PreTrigger should be set to Fs.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.WriteInfo.InputType">
+            <summary>
+            Type of input. Refer to <see cref="T:ECB_src.EcbModule_TC.InputTypes"/>, <see cref="T:ECB_src.EcbModule_RTD.InputTypes"/> and <see cref="T:ECB_src.EcbModule_ADC.InputTypes"/>
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.WriteInfo.Opt">
+            <summary>
+            Option setting of module. Refer to <see cref="T:ECB_src.EcbModule_TC.OptTC"/>, <see cref="T:ECB_src.EcbModule_RTD.OptRTD"/>.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.WriteInfo.CalibratingVal">
+            <summary>
+            Calibrating offset value of module.
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule.WriteInfo.#ctor">
+            <summary>
+            Constructor of <see cref="T:ECB_src.EcbModule.WriteInfo"/>.
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule.WriteInfo.ToByteArray">
+            <summary>
+            Transfer the properties into byte array. This array can be send to and setup the module. 
+            </summary>
+            <returns>Byte array of properties.</returns>
+        </member>
+        <member name="T:ECB_src.EcbModule.ReadInfo">
+            <summary>
+            Class of information can read from ECB.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.ModuleType">
+            <summary>
+            Type of module. Refer to <see cref="T:ECB_src.EcbModule.Module_Type"/>.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.ChEnabled">
+            <summary>
+            Channel(s) be enabled. Bit index means index of channel. Ex. 0x01 = channel 1 is enabled; 0x03 = channel 1 and 2 are enabled.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.FWVer">
+            <summary>
+            Firmware version of module.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.FWSubVer">
+            <summary>
+            Firmware subversion of module.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.ChNum">
+            <summary>
+            Number of input channel.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.Resv">
+            <summary>
+            Reserved.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.Fs">
+            <summary>
+            Sampling frequency of module.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.PreTrigger">
+            <summary>
+            PreTrigger number. If you want to pretrigger 1 second, PreTrigger should be set to Fs.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.Resv1">
+            <summary>
+            Reserved.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.InputType">
+            <summary>
+            Type of input. Refer to <see cref="T:ECB_src.EcbModule_TC.InputTypes"/>, <see cref="T:ECB_src.EcbModule_RTD.InputTypes"/> and <see cref="T:ECB_src.EcbModule_ADC.InputTypes"/>
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.Opt">
+            <summary>
+            Option setting of module. Refer to <see cref="T:ECB_src.EcbModule_TC.OptTC"/>, <see cref="T:ECB_src.EcbModule_RTD.OptRTD"/>.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ReadInfo.CalibratingVal">
+            <summary>
+            Calibrating offset value of module.
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule.ReadInfo.#ctor(System.Byte[])">
+            <summary>
+            Constructor of ReadInfo
+            </summary>
+            <param name="bytes">Bytes received from module.</param>
+        </member>
+        <member name="T:ECB_src.EcbModule.Module_Type">
+            <summary>
+            Type of module
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule.Module_Type.No_conn">
+            <summary>
+            未連接
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule.Module_Type.TC">
+            <summary>
+            熱電偶模組
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule.Module_Type.RTD">
+            <summary>
+            RTD模組
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule.Module_Type.ADC">
+            <summary>
+            ADC模組
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule.Module_Type.Bridge">
+            <summary>
+            底板
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule.Func">
+            <summary>
+            Delegate of SendPack in ECB.cs
+            </summary>
+            <param name="cmd">Command type. Refer to <see cref="T:ECB_src.Cmds"/></param>
+            <param name="dest">Destination of the package. Refer to <see cref="T:ECB_src.Dests"/></param>
+            <param name="data">Data wants to send. null if no data needs to be send</param>
+            <param name="Tcs">If you want to know the package is send or not, create a <see cref="T:System.Threading.Tasks.TaskCompletionSource`1"/> as argument.</param>
+            <returns>Error state. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="F:ECB_src.EcbModule.SendCallBack">
+            <summary>
+            Callback function declearation
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule._cmdRespTcs">
+            <summary>
+            Used to detect the command trasnfer to ECB had been replied.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.Layer">
+            <summary>
+            Specifying the layer you wants to set by this object.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ModuleType">
+            <summary>
+            Type of module. Refer to <see cref="T:ECB_src.EcbModule.Module_Type"/>.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.ChNum">
+            <summary>
+            Number of input channel.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule.FirmwareVer">
+            <summary>
+            Firmware version of module.
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule.ToProperties(System.Byte[])">
+            <summary>
+            Set the properties from the bytes received from module.
+            </summary>
+            <param name="bytes">Bytes received from module</param>
+        </member>
+        <member name="M:ECB_src.EcbModule.Reset(System.Threading.Tasks.TaskCompletionSource{ECB_src.Cmds}@)">
+            <summary>
+            Reset the task completion source.
+            </summary>
+            <param name="tcs">The TCS you want to reset.</param>
+            <returns>TCS after reset.</returns>
+        </member>
+        <member name="M:ECB_src.EcbModule.DownloadFW">
+            <summary>
+            下載韌體至模組
+            </summary>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="T:ECB_src.EcbAcqModule">
+            <summary>
+            擷取模組的基底類別
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.RecDataNum">
+            <summary>
+            Number of RecDataNum data will be collected
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.RecedDataNum">
+            <summary>
+            已記錄資料數量
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.PreTrigger">
+            <summary>
+            預觸發功能旗標
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.RecSec">
+            <summary>
+            欲紀錄秒數
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.isAcquring">
+            <summary>
+            擷取狀態旗標
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.ChEnable">
+            <summary>
+            Ch enable selection : each bits represent a channel.
+            <para>ex. channel 1 and channel 4 is enabled : ChEnable = 0x09</para>
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.Fs">
+            <summary>
+            擷取頻率
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.ChEnableNum">
+            <summary>
+            啟動頻道數量
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.CalibratingVal">
+            <summary>
+            各頻道校正值
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.InputType">
+            <summary>
+            Input type of module. Refer to InputTypes
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.SlotTitle">
+            <summary>
+            模組別稱(Ex:加速規模組)
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbAcqModule.ChTitle">
+            <summary>
+            頻道別稱(Ex:{X軸, Y軸, Z軸})
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.SetAcqSecond(System.UInt32)">
+            <summary>
+            設定模組擷取時間
+            </summary>
+            <param name="sec">擷取秒數(sec)，設為0無限制擷取時間</param>
+            <returns>錯誤狀態，參考<see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.GetRecData">
+            <summary>
+            取得擷取到的資料
+            </summary>
+            <returns>擷取到的資料，每一欄代表被啟動的頻道，例如：<see cref="P:ECB_src.EcbAcqModule.ChEnable"/>=0x05，第一欄為ch1資料，第二欄為ch3資料</returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.StartAcq(System.UInt32)">
+            <summary>
+            模組啟動擷取
+            </summary>
+            <param name="sec">欲擷取的秒數，預設為0(無限時間擷取)</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.SetCalibratingVal(System.Single[])">
+            <summary>
+            設定模組偏移校正值
+            </summary>
+            <param name="data">欲寫入模組的校正值</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.SetRecData(System.Byte[])">
+            <summary>
+            將接收到的資料轉換成物理量單位
+            </summary>
+            <param name="data">接收到的資料</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.StopAcq">
+            <summary>
+            模組停止擷取
+            </summary>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.SWTrigger">
+            <summary>
+            將模組切換成軟體觸發模式，當想要達到多模組同時啟動擷取時，此函式需要先被呼叫。
+            </summary>
+            <returns>錯誤狀態，參考<see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule._SetModule">
+            <summary>
+            Setup the module by the properties of the object.
+            </summary>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.ToJson">
+            <summary>
+            將物件裡的參數轉換成JSON字串，方便輸出config檔
+            </summary>
+            <returns>JSON字串</returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModule.FromJson(System.Byte[])">
+            <summary>
+            從JSON字串還原物件裡的參數
+            </summary>
+            <param name="JsonBytes">JSON字串</param>
+            <returns>錯誤狀態，參考<see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="T:ECB_src.EcbAcqModuleConverter">
+            <summary>
+            將物件參數轉換為JSON格式的類別
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbAcqModuleConverter.CanConvert(System.Type)">
+            <summary>
+            判斷類別是否可被轉換成JSON
+            </summary>
+            <param name="typeToConvert">欲判斷的類別</param>
+            <returns>true代表可以被轉換</returns>
+        </member>
+        <member name="M:ECB_src.EcbAcqModuleConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            僅實作，未使用
+            </summary>
+            <param name="reader"></param>
+            <param name="typeToConvert"></param>
+            <param name="options"></param>
+        </member>
+        <member name="M:ECB_src.EcbAcqModuleConverter.Write(System.Text.Json.Utf8JsonWriter,ECB_src.EcbAcqModule,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            將物件裡的參數轉換為JSON格式。當呼叫"JsonSerializer.Serialize"，會呼叫此函數。
+            </summary>
+            <param name="writer"></param>
+            <param name="module">欲轉換的物件</param>
+            <param name="options"></param>
+        </member>
+        <member name="T:ECB_src.EcbModule_Bridge">
+            <summary>
+            Bridge類別
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule_Bridge.#ctor(System.Func{ECB_src.Cmds,ECB_src.Dests,System.Byte[],System.Threading.Tasks.TaskCompletionSource{ECB_src.Cmds},ECB_src.ECB_Errs})">
+            <summary>
+            Bridge類別建構子
+            </summary>
+            <param name="sendCallBack">SendPack方法，方便物件與ECB通訊</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_Bridge.ToProperties(System.Byte[])">
+            <summary>
+            將收到的byte array轉換為物件參數
+            </summary>
+            <param name="bytes">從ECB接收到的資料</param>
+        </member>
+        <member name="T:ECB_src.EcbModule_TC">
+            <summary>
+            TC熱電偶模組的類別
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule_TC.OptTC">
+            <summary>
+            TC模組的option設定類別
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_TC.OptTC.Avg">
+            <summary>
+            平均筆數，參考<see cref="T:ECB_src.EcbModule_TC.Avgs"/>，用於減少雜訊。
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_TC.OptTC.Notch">
+            <summary>
+            凹陷濾波器設定，參考<see cref="T:ECB_src.EcbModule_TC.Notchs"/>
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_TC.OptTC.InputType">
+            <summary>
+            Type of sensor input, please refer to the relative type of module
+            <para>B, E, J, K, N, R, S, T (refer to InputTypes enum)</para>
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.OptTC.#ctor(ECB_src.EcbModule_TC.Avgs,ECB_src.EcbModule_TC.Notchs)">
+            <summary>
+            OptTC建構子
+            </summary>
+            <param name="avg">欲設定的平均筆數，用於減少雜訊。</param>
+            <param name="notch">欲設定的凹陷濾波器</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.OptTC.ToUInt64">
+            <summary>
+            將物件資料轉換成UInt64方便傳輸。
+            </summary>
+            <returns>轉換後的資料</returns>
+        </member>
+        <member name="T:ECB_src.EcbModule_TC.InputTypes">
+            <summary>
+            熱電偶輸入類型
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule_TC.Avgs">
+            <summary>
+            平均筆數選項
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule_TC.Notchs">
+            <summary>
+            凹陷濾波器選項
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule_TC.Max_Fs">
+            <summary>
+            TC模組最大擷取頻率為10Hz
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule_TC._MaxPreTriggerLen">
+            <summary>
+            TC模組最大pre-trigger筆數為512,000筆。
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_TC.Avg">
+            <summary>
+            average filter : 1, 2, 4, 8, 16 (refer to TC_Avg enum)
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_TC.Notch">
+            <summary>
+            Notch filter : 0 for 60Hz, 1 for 50Hz (refer to TC_Notch enum)
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.#ctor(ECB_src.Dests,System.Func{ECB_src.Cmds,ECB_src.Dests,System.Byte[],System.Threading.Tasks.TaskCompletionSource{ECB_src.Cmds},ECB_src.ECB_Errs})">
+            <summary>
+            Constructor of TC class.
+            </summary>
+            <param name="dest">Slot index of the TC module. Refer to <see cref="T:ECB_src.Dests"/></param>
+            <param name="sendCallBack">SendPack function. Let the object can communicate with ECB.</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.ToByteArray">
+            <summary>
+            Convert the properties in object into bytes array. Then the bytes array can be send to and setup the module.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.ToProperties(System.Byte[])">
+            <summary>
+            Restore the properties from the data received from ECB.
+            </summary>
+            <param name="bytes">Data received from ECB</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.AddInput(System.Byte,ECB_src.EcbModule_TC.InputTypes)">
+            <summary>
+            新增擷取卡輸入頻道
+            </summary>
+            <param name="ch">愈啟動的頻道編號(0~7)</param>
+            <param name="type">輸入的熱電偶類型，參考<see cref="T:ECB_src.EcbModule_TC.InputTypes"/></param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.AddInput(System.Byte,System.Byte)">
+            <summary>
+            新增擷取卡輸入頻道
+            </summary>
+            <param name="ch">愈啟動的頻道編號(0~7)</param>
+            <param name="type">輸入的熱電偶類型，參考<see cref="T:ECB_src.EcbModule_TC.InputTypes"/></param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.RemoveInput">
+            <summary>
+            移除擷取卡所有輸入頻道
+            </summary>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.RemoveInput(System.Byte)">
+            <summary>
+            移除擷取卡特定輸入頻道
+            </summary>
+            <param name="ch">愈移除的頻道編號(0~7)</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.SetFs(System.UInt16)">
+            <summary>
+            設定擷取卡擷取頻率
+            </summary>
+            <param name="fs">擷取頻率</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_TC.SetPreTrigger(System.UInt32)">
+            <summary>
+            設定pre trigger筆數
+            </summary>
+            <param name="preTriggerNum">欲pre-trigger的筆數</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="T:ECB_src.EcbModule_RTD">
+            <summary>
+            Class of RTD module
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule_RTD.OptRTD">
+            <summary>
+            Option of RTD module
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_RTD.OptRTD.Notch">
+            <summary>
+            Notch filter of RTD module. Refer to <see cref="T:ECB_src.EcbModule_RTD.Notchs"/>
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_RTD.OptRTD.InputType">
+            <summary>
+            Type of sensor input, please refer to the relative type of module
+            <para> 0 for PT100, 1 for PT1000. Refer to <see cref="T:ECB_src.EcbModule_RTD.InputTypes"/></para>
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.OptRTD.#ctor(ECB_src.EcbModule_RTD.Notchs)">
+            <summary>
+            Constructor of RTD.
+            </summary>
+            <param name="notch">Notch filter wants to set.</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.OptRTD.ToUInt64">
+            <summary>
+            Convert the properties of object into UInt64. The result can be sent to ECB.
+            </summary>
+            <returns>Convert result.</returns>
+        </member>
+        <member name="F:ECB_src.EcbModule_RTD.Max_Fs">
+            <summary>
+            Maximum sampling frequency of RTD module is 60 Hz.
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule_RTD._MaxPreTriggerLen">
+            <summary>
+            Maximum of pre-trigger number is 512,000 points of data.
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule_RTD.InputTypes">
+            <summary>
+            Input type of RTD module.
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule_RTD.Notchs">
+            <summary>
+            Notch filter option for RTD module.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_RTD.Notch">
+            <summary>
+            Notch filter : 0 for 60Hz, 1 for 50Hz. Refer to <see cref="T:ECB_src.EcbModule_RTD.Notchs"/>
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.#ctor(ECB_src.Dests,System.Func{ECB_src.Cmds,ECB_src.Dests,System.Byte[],System.Threading.Tasks.TaskCompletionSource{ECB_src.Cmds},ECB_src.ECB_Errs})">
+            <summary>
+            Constructor of RTD object.
+            </summary>
+            <param name="dest">Slot index of the RTD module. Refer to <see cref="T:ECB_src.Dests"/>.</param>
+            <param name="sendCallBack">SendPack function. Let the object can communicate with ECB.</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.ToByteArray">
+            <summary>
+            Convert the properties of the object into bytes array. The result can be sent to and setup the RTD module.
+            </summary>
+            <returns>Convert result.</returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.ToProperties(System.Byte[])">
+            <summary>
+            Restore properties of the object from received data from ECB.
+            </summary>
+            <param name="bytes">Data received from ECB</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.AddInput(System.Byte,ECB_src.EcbModule_RTD.InputTypes)">
+            <summary>
+            新增擷取卡輸入頻道
+            </summary>
+            <param name="ch">愈啟動的頻道編號(0~3)</param>
+            <param name="type">輸入的RTD類型，參考<see cref="T:ECB_src.EcbModule_RTD.InputTypes"/></param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.AddInput(System.Byte,System.Byte)">
+            <summary>
+            新增擷取卡輸入頻道
+            </summary>
+            <param name="ch">愈啟動的頻道編號(0~3)</param>
+            <param name="type">輸入的RTD類型，參考<see cref="T:ECB_src.EcbModule_RTD.InputTypes"/></param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.RemoveInput">
+            <summary>
+            移除擷取卡所有輸入頻道
+            </summary>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.RemoveInput(System.Byte)">
+            <summary>
+            移除擷取卡特定輸入頻道
+            </summary>
+            <param name="ch">愈移除的頻道編號(0~3)</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.SetFs(System.UInt16)">
+            <summary>
+            設定擷取卡擷取頻率
+            </summary>
+            <param name="fs">擷取頻率</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_RTD.SetPreTrigger(System.UInt32)">
+            <summary>
+            Set the pre-trigger number.
+            </summary>
+            <param name="preTriggerNum">Number of points want to pre-trigger.</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="T:ECB_src.EcbModule_ADC">
+            <summary>
+            Class of ADC module
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule_ADC.Max_Fs">
+            <summary>
+            Maximum sampling frequency of ADC module is 52,734 Hz.
+            </summary>
+        </member>
+        <member name="F:ECB_src.EcbModule_ADC._MaxPreTriggerLen">
+            <summary>
+            Maximum of pre-trigger number is 85,333 points of data.
+            </summary>
+        </member>
+        <member name="T:ECB_src.EcbModule_ADC.InputTypes">
+            <summary>
+            Input type of ADC module.
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbModule_ADC.Sensitivity">
+            <summary>
+            Sensitivity of sensor. Each element for each channel. Those value will be mulitplied to recorded data.
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.#ctor(ECB_src.Dests,System.Func{ECB_src.Cmds,ECB_src.Dests,System.Byte[],System.Threading.Tasks.TaskCompletionSource{ECB_src.Cmds},ECB_src.ECB_Errs})">
+            <summary>
+            Constructor of ADC object
+            </summary>
+            <param name="dest">Slot index of the ADC module. Refer to <see cref="T:ECB_src.Dests"/>.</param>
+            <param name="sendCallBack">SendPack function. Let the object can communicate with ECB.</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.ToByteArray">
+            <summary>
+            Convert the properties of the object into bytes array. The result can be sent to and setup the ADC module.
+            </summary>
+            <returns>Convert result.</returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.ToProperties(System.Byte[])">
+            <summary>
+            Restore properties of the object from received data from ECB.
+            </summary>
+            <param name="bytes">Data received from ECB</param>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.AddInput(System.Byte,ECB_src.EcbModule_ADC.InputTypes)">
+            <summary>
+            Enable specific channel of input.
+            </summary>
+            <param name="ch">Channel wants to enable. From 0 to 3.</param>
+            <param name="type">Input type, Refer to <see cref="T:ECB_src.EcbModule_ADC.InputTypes"/></param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.AddInput(System.Byte,System.Byte)">
+            <summary>
+            Enable specific channel of input.
+            </summary>
+            <param name="ch">Channel wants to enable. From 0 to 3.</param>
+            <param name="type">Input type, Refer to <see cref="T:ECB_src.EcbModule_ADC.InputTypes"/></param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.RemoveInput">
+            <summary>
+            Disable all input channel.
+            </summary>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.RemoveInput(System.Byte)">
+            <summary>
+            Disable specific channel of input.
+            </summary>
+            <param name="ch">Channel wants to disable. From 0 to 3.</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.SetFs(System.UInt16)">
+            <summary>
+            Set the sampling frequency.
+            </summary>
+            <param name="fs">Desire sampling frequency.</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.SetPreTrigger(System.UInt32)">
+            <summary>
+            Set the pre-trigger number.
+            </summary>
+            <param name="preTriggerNum">Number of points want to pre-trigger.</param>
+            <returns>Error status. Refer to <see cref="T:ECB_src.ECB_Errs"/></returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC.GetRecData">
+            <summary>
+            取得ADC模組已擷取資料
+            </summary>
+            <returns>已擷取資料</returns>
+        </member>
+        <member name="M:ECB_src.EcbModule_ADC._ADCConvert(System.UInt32)">
+            <summary>
+            Calculate two's complement from ADC result
+            </summary>
+            <param name="data">Raw data from ECB</param>
+            <returns>Signed ADC result</returns>
+        </member>
+        <member name="T:ECB_src.EcbPacket">
+            <summary>
+            與ECB進行通訊的封包物件
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbPacket.Dest">
+            <summary>
+            封包傳送目的地(start from 0)
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbPacket.Cmd">
+            <summary>
+            封包命令
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbPacket.SubCmd">
+            <summary>
+            封包子命令
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbPacket.TimeoutFlag">
+            <summary>
+            封包未響應旗標
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbPacket.DataLen">
+            <summary>
+            封包內含資料長度
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbPacket.Resv">
+            <summary>
+            保留
+            </summary>
+        </member>
+        <member name="P:ECB_src.EcbPacket.Data">
+            <summary>
+            封包內含資料
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbPacket.#ctor(System.Byte[])">
+            <summary>
+            ECB通訊封包建構子
+            </summary>
+            <param name="bytes">封包預設內容</param>
+            <exception cref="T:System.Exception">提供預設內容的長度不足</exception>
+        </member>
+        <member name="M:ECB_src.EcbPacket.#ctor">
+            <summary>
+            ECB通訊封包建構子
+            </summary>
+        </member>
+        <member name="M:ECB_src.EcbPacket.ToByteArray">
+            <summary>
+            將各屬性轉換成ECB可接受之封包格式
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

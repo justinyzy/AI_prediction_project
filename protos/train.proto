@@ -1,0 +1,66 @@
+syntax = "proto2";
+package protos;
+
+message Train_setting {
+    // Steps for train
+    required int32 max_step                         = 1 [default = 500];
+
+    // Setting for the learning rate method.
+    required learn_rate_set lr_info                 = 2;
+
+    // regularizer
+    optional regularize_setting regularize_info     = 3;
+
+    // Probability for nn be drop
+    optional float drop_out_rate                    = 4;
+
+    // How many data to read as a batch. Notice -1 aas applying whole data set.
+    optional int32 train_batch                      = 5 [default = 1];
+
+    // Once user want the z score para be learnable.
+    required bool z_sc_learnable_b                   = 6 [default = false];
+
+    // Whether nn model should opt mat err
+    required bool opt_max_err_bool                  = 7 [default = false];
+}
+
+message learn_rate_set {
+
+    // Init learning rate.
+    required float init_lr                          = 1 [default = 0.01];
+
+    // Setting for adamOptimizer.
+    optional Adam_opt adam_info                     = 2;
+
+    // Exponential decay learning rate.
+    optional exe_decay_lr exp_decay_info            = 3;
+
+}
+
+message regularize_setting {
+    // Method ["l2" or "l1"]
+    required string method  = 1 [default = "l2"];
+
+    // The regaularization loss weight
+    required float  ratio   = 2 [default = 0.01];
+}
+
+message exe_decay_lr {
+    // The decay steps for exponential rate
+    required float decay_steps = 1;
+
+    // The decay rate for exponential rate
+    required float decay_rate  = 2;
+}
+
+
+message Adam_opt {
+    // Weight for momentum
+    required float beta_1   = 1 [default = 0.9];
+
+    // Weight for RMS prop
+    required float beta_2   = 2 [default = 0.999];
+
+    // Avoiding devided by zero
+    required float epsilon  = 3 [default = 1e-05];
+}

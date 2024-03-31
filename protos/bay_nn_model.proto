@@ -1,0 +1,52 @@
+syntax = "proto2";
+package protos;
+
+import "protos/nn_regression.proto";
+import "protos/bayesian_mixing.proto";
+
+message Main_bay_NN {
+
+    // Setting for baseline of NN model (Contain init state)
+    required NN_H_D NN_info     = 1;
+
+    // Settgin for bay info
+    required BAY_NN Bay_nn_info = 2;
+}
+
+message BAY_NN {
+    // Set range of up layers
+    required int_range range_up_L           = 1;
+
+    // Set range of down layers
+    required int_range range_down_L         = 2;
+
+    // Set range of flat layers
+    optional int_range range_flat_L         = 11;
+
+    // Set range of up factor
+    required int_range range_up_F           = 3;
+
+    // Set range of down factor
+    required int_range range_down_F         = 4;
+
+    // Set range of drop out rate
+    optional float_range range_drop_rate    = 5;
+
+    // Set range of l2 reguralize para
+    optional float_range range_l2_r         = 6;
+
+    // Set for activate function option
+    repeated string opt_act_func            = 10;
+
+    // Time of bay opt
+    required int32 bay_times                = 7 [default = 50];
+
+    // Path to save bay result
+    required string bay_save_p              = 8;
+
+    // Set target error
+    required error_select error_info        = 9;
+
+    // Set for last output size
+    required int32 output_dim              = 12 [default = 1];
+}

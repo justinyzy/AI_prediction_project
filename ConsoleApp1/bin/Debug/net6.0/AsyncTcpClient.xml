@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AsyncTcpClient</name>
+    </assembly>
+    <members>
+        <member name="T:Unclassified.Net.AsyncTcpClient">
+            <summary>
+            Provides asynchronous client connections for TCP network services.
+            </summary>
+            <remarks>
+            This class can be used directly when setting the relevant callback methods
+            <see cref="P:Unclassified.Net.AsyncTcpClient.ConnectedCallback"/>, <see cref="P:Unclassified.Net.AsyncTcpClient.ClosedCallback"/> or
+            <see cref="P:Unclassified.Net.AsyncTcpClient.ReceivedCallback"/>. Alternatively, a class inheriting from
+            <see cref="T:Unclassified.Net.AsyncTcpClient"/> can implement the client logic by overriding the protected
+            methods.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:Unclassified.Net.AsyncTcpClient"/> class.
+            </summary>
+        </member>
+        <member name="E:Unclassified.Net.AsyncTcpClient.Message">
+            <summary>
+            Occurs when a trace message is available.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.ServerTcpClient">
+            <summary>
+            Gets or sets the <see cref="T:System.Net.Sockets.TcpClient"/> to use. Only for client connections that were
+            accepted by an <see cref="T:Unclassified.Net.AsyncTcpListener"/>.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.RemoteEndPoint">
+            <summary>
+            Gets or sets the remote endpoint of the socket. Only for client connections that were
+            accepted by an <see cref="T:Unclassified.Net.AsyncTcpListener"/>.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.ConnectTimeout">
+            <summary>
+            Gets or sets the amount of time an <see cref="T:Unclassified.Net.AsyncTcpClient"/> will wait to connect
+            once a connection operation is initiated.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.MaxConnectTimeout">
+            <summary>
+            Gets or sets the maximum amount of time an <see cref="T:Unclassified.Net.AsyncTcpClient"/> will wait to
+            connect once a repeated connection operation is initiated. The actual connection
+            timeout is increased with every try and reset when a connection is established.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.AutoReconnect">
+            <summary>
+            Gets or sets a value indicating whether the client should try to reconnect after the
+            connection was closed.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.HostName">
+            <summary>
+            Gets or sets the name of the host to connect to.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.IPAddress">
+            <summary>
+            Gets or sets the IP address of the host to connect to.
+            Only regarded if <see cref="P:Unclassified.Net.AsyncTcpClient.HostName"/> is null or empty.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.Port">
+            <summary>
+            Gets or sets the port number of the remote host.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.IsConnected">
+            <summary>
+            Gets a value indicating whether the client is currently connected.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.ByteBuffer">
+            <summary>
+            Gets the buffer of data that was received from the remote host.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.ClosedTask">
+            <summary>
+            A <see cref="T:System.Threading.Tasks.Task"/> that can be awaited to close the connection. This task will
+            complete when the connection was closed remotely.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.IsClosing">
+            <summary>
+            Gets a value indicating whether the <see cref="P:Unclassified.Net.AsyncTcpClient.ClosedTask"/> has completed.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.ConnectedCallback">
+            <summary>
+            Called when the client has connected to the remote host. This method can implement the
+            communication logic to execute when the connection was established. The connection will
+            not be closed before this method completes.
+            </summary>
+            <remarks>
+            This callback method may not be called when the <see cref="M:Unclassified.Net.AsyncTcpClient.OnConnectedAsync(System.Boolean)"/> method
+            is overridden by a derived class.
+            </remarks>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.ClosedCallback">
+            <summary>
+            Called when the connection was closed. The parameter specifies whether the connection
+            was closed by the remote host.
+            </summary>
+            <remarks>
+            This callback method may not be called when the <see cref="M:Unclassified.Net.AsyncTcpClient.OnClosed(System.Boolean)"/> method is
+            overridden by a derived class.
+            </remarks>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpClient.ReceivedCallback">
+            <summary>
+            Called when data was received from the remote host. The parameter specifies the number
+            of bytes that were received. This method can implement the communication logic to
+            execute every time data was received. New data will not be received before this method
+            completes.
+            </summary>
+            <remarks>
+            This callback method may not be called when the <see cref="M:Unclassified.Net.AsyncTcpClient.OnReceivedAsync(System.Int32)"/> method
+            is overridden by a derived class.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.RunAsync">
+            <summary>
+            Runs the client connection asynchronously.
+            </summary>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.Disconnect">
+            <summary>
+            Closes the socket connection normally. This does not release the resources used by the
+            <see cref="T:Unclassified.Net.AsyncTcpClient"/>.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.Dispose">
+            <summary>
+            Releases the managed and unmanaged resources used by the <see cref="T:Unclassified.Net.AsyncTcpClient"/>.
+            Closes the connection to the remote host and disables automatic reconnecting.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.WaitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Waits asynchronously until received data is available in the buffer.
+            </summary>
+            <param name="cancellationToken">A cancellation token used to propagate notification that this operation should be canceled.</param>
+            <returns>true, if data is available; false, if the connection is closing.</returns>
+            <exception cref="T:System.OperationCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.Send(System.ArraySegment{System.Byte},System.Threading.CancellationToken)">
+            <summary>
+            Sends data to the remote host.
+            </summary>
+            <param name="data">The data to send.</param>
+            <param name="cancellationToken">A cancellation token used to propagate notification that this operation should be canceled.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.OnConnectedAsync(System.Boolean)">
+            <summary>
+            Called when the client has connected to the remote host. This method can implement the
+            communication logic to execute when the connection was established. The connection will
+            not be closed before this method completes.
+            </summary>
+            <param name="isReconnected">true, if the connection was closed and automatically reopened;
+              false, if this is the first established connection for this client instance.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.OnClosed(System.Boolean)">
+            <summary>
+            Called when the connection was closed.
+            </summary>
+            <param name="remote">true, if the connection was closed by the remote host; false, if
+              the connection was closed locally.</param>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpClient.OnReceivedAsync(System.Int32)">
+            <summary>
+            Called when data was received from the remote host. This method can implement the
+            communication logic to execute every time data was received. New data will not be
+            received before this method completes.
+            </summary>
+            <param name="count">The number of bytes that were received. The actual data is available
+              through the <see cref="P:Unclassified.Net.AsyncTcpClient.ByteBuffer"/>.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Unclassified.Net.AsyncTcpEventArgs">
+            <summary>
+            Provides data for the <see cref="E:Unclassified.Net.AsyncTcpClient.Message"/> event.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpEventArgs.#ctor(System.String,System.Exception)">
+            <summary>
+            Initialises a new instance of the <see cref="T:Unclassified.Net.AsyncTcpEventArgs"/> class.
+            </summary>
+            <param name="message">The trace message.</param>
+            <param name="exception">The exception that was thrown, if any.</param>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpEventArgs.Message">
+            <summary>
+            Gets the trace message.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpEventArgs.Exception">
+            <summary>
+            Gets the exception that was thrown, if any.
+            </summary>
+        </member>
+        <member name="T:Unclassified.Net.AsyncTcpListener">
+            <summary>
+            Listens asynchronously for connections from TCP network clients.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpListener.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:Unclassified.Net.AsyncTcpListener"/> class.
+            </summary>
+        </member>
+        <member name="E:Unclassified.Net.AsyncTcpListener.Message">
+            <summary>
+            Occurs when a trace message is available.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpListener.IPAddress">
+            <summary>
+            Gets or sets the local IP address to listen on. Default is all network interfaces.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpListener.Port">
+            <summary>
+            Gets or sets the port on which to listen for incoming connection attempts.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Net.AsyncTcpListener.ClientConnectedCallback">
+            <summary>
+            Called when a pending connection request was accepted. When this method completes, the
+            client connection will be closed.
+            </summary>
+            <remarks>
+            This callback method may not be called when the <see cref="M:Unclassified.Net.AsyncTcpListener.OnClientConnected(System.Net.Sockets.TcpClient)"/> method
+            is overridden by a derived class.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpListener.RunAsync">
+            <summary>
+            Starts listening asynchronously for incoming connection requests.
+            </summary>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpListener.Stop(System.Boolean)">
+            <summary>
+            Closes the listener.
+            </summary>
+            <param name="closeClients">Specifies whether accepted connections should be closed, too.</param>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpListener.OnClientConnected(System.Net.Sockets.TcpClient)">
+            <summary>
+            Called when a pending connection request was accepted. When this method completes, the
+            client connection will be closed.
+            </summary>
+            <param name="tcpClient">The <see cref="T:System.Net.Sockets.TcpClient"/> that represents the accepted connection.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Unclassified.Net.AsyncTcpListener`1">
+            <summary>
+            Listens asynchronously for connections from TCP network clients.
+            </summary>
+            <typeparam name="TClient">The type to instantiate for accepted connection requests.</typeparam>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpListener`1.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:Unclassified.Net.AsyncTcpListener`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Net.AsyncTcpListener`1.OnClientConnected(System.Net.Sockets.TcpClient)">
+            <summary>
+            Instantiates a new <see cref="T:Unclassified.Net.AsyncTcpClient"/> instance of the type
+            <typeparamref name="TClient"/> that runs the accepted connection.
+            </summary>
+            <param name="tcpClient">The <see cref="T:System.Net.Sockets.TcpClient"/> that represents the accepted connection.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+            <remarks>
+            This implementation does not call the <see cref="M:Unclassified.Net.AsyncTcpListener`1.OnClientConnected(System.Net.Sockets.TcpClient)"/> callback method.
+            </remarks>
+        </member>
+        <member name="T:Unclassified.Util.ByteBuffer">
+            <summary>
+            Represents a first-in, first-out collection of bytes with asynchronous dequeuing.
+            </summary>
+        </member>
+        <member name="F:Unclassified.Util.ByteBuffer.buffer">
+            <summary>
+            The internal buffer.
+            </summary>
+        </member>
+        <member name="F:Unclassified.Util.ByteBuffer.head">
+            <summary>
+            The buffer index of the first byte to dequeue.
+            </summary>
+        </member>
+        <member name="F:Unclassified.Util.ByteBuffer.tail">
+            <summary>
+            The buffer index of the last byte to dequeue.
+            </summary>
+        </member>
+        <member name="F:Unclassified.Util.ByteBuffer.isEmpty">
+            <summary>
+            Indicates whether the buffer is empty. The empty state cannot be distinguished from the
+            full state with <see cref="F:Unclassified.Util.ByteBuffer.head"/> and <see cref="F:Unclassified.Util.ByteBuffer.tail"/> alone.
+            </summary>
+        </member>
+        <member name="F:Unclassified.Util.ByteBuffer.dequeueManualTcs">
+            <summary>
+            Used to signal the waiting <see cref="M:Unclassified.Util.ByteBuffer.DequeueAsync(System.Int32,System.Threading.CancellationToken)"/> method.
+            Set when new data becomes available. Only reset there.
+            </summary>
+        </member>
+        <member name="F:Unclassified.Util.ByteBuffer.availableTcs">
+            <summary>
+            Used to signal the waiting <see cref="M:Unclassified.Util.ByteBuffer.WaitAsync(System.Threading.CancellationToken)"/> method.
+            Set when new data becomes availalble. Reset when the queue is empty.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:Unclassified.Util.ByteBuffer"/> class that is empty and has
+            the default initial capacity.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.#ctor(System.Byte[])">
+            <summary>
+            Initialises a new instance of the <see cref="T:Unclassified.Util.ByteBuffer"/> class that contains bytes
+            copied from the specified collection and has sufficient capacity to accommodate the
+            number of bytes copied.
+            </summary>
+            <param name="bytes">The collection whose bytes are copied to the new <see cref="T:Unclassified.Util.ByteBuffer"/>.</param>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.#ctor(System.Int32)">
+            <summary>
+            Initialises a new instance of the <see cref="T:Unclassified.Util.ByteBuffer"/> class that is empty and has
+            the specified initial capacity.
+            </summary>
+            <param name="capacity">The initial number of bytes that the <see cref="T:Unclassified.Util.ByteBuffer"/> can contain.</param>
+        </member>
+        <member name="P:Unclassified.Util.ByteBuffer.Count">
+            <summary>
+            Gets the number of bytes contained in the buffer.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Util.ByteBuffer.Buffer">
+            <summary>
+            Gets the current buffer contents.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Util.ByteBuffer.Capacity">
+            <summary>
+            Gets the capacity of the buffer.
+            </summary>
+        </member>
+        <member name="P:Unclassified.Util.ByteBuffer.AutoTrim">
+            <summary>
+            Gets or sets a value indicating whether the buffer is automatically trimmed on dequeue
+            if the <see cref="P:Unclassified.Util.ByteBuffer.Count"/> becomes significantly smaller than the <see cref="P:Unclassified.Util.ByteBuffer.Capacity"/>.
+            Default is true.
+            </summary>
+            <remarks>
+            This property is not thread-safe and should only be set if no other operation is ongoing.
+            </remarks>
+        </member>
+        <member name="P:Unclassified.Util.ByteBuffer.AutoTrimMinCapacity">
+            <summary>
+            Gets or sets the minimum capacity to maintain when automatically trimming on dequeue.
+            See <see cref="P:Unclassified.Util.ByteBuffer.AutoTrim"/>. Default is the initial capacity as set in the constructor.
+            </summary>
+            <remarks>
+            This property is not thread-safe and must only be set if no other operation is ongoing.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.Clear">
+            <summary>
+            Removes all bytes from the buffer.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.SetCapacity(System.Int32)">
+            <summary>
+            Sets the buffer capacity. Existing bytes are kept in the buffer.
+            </summary>
+            <param name="capacity">The new buffer capacity.</param>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.TrimExcess">
+            <summary>
+            Sets the capacity to the actual number of bytes in the buffer, if that number is less
+            than 90 percent of current capacity.
+            </summary>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.Enqueue(System.Byte[])">
+            <summary>
+            Adds bytes to the end of the buffer.
+            </summary>
+            <param name="bytes">The bytes to add to the buffer.</param>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.Enqueue(System.ArraySegment{System.Byte})">
+            <summary>
+            Adds bytes to the end of the buffer.
+            </summary>
+            <param name="segment">The bytes to add to the buffer.</param>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.Enqueue(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Adds bytes to the end of the buffer.
+            </summary>
+            <param name="bytes">The bytes to add to the buffer.</param>
+            <param name="offset">The index in <paramref name="bytes"/> of the first byte to add.</param>
+            <param name="count">The number of bytes to add.</param>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.Dequeue(System.Int32)">
+            <summary>
+            Removes and returns bytes at the beginning of the buffer.
+            </summary>
+            <param name="maxCount">The maximum number of bytes to dequeue.</param>
+            <returns>The dequeued bytes. This can be fewer than requested if no more bytes are available.</returns>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.Dequeue(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Removes and returns bytes at the beginning of the buffer.
+            </summary>
+            <param name="buffer">The buffer to write the data to.</param>
+            <param name="offset">The offset in the <paramref name="buffer"/> to write to.</param>
+            <param name="maxCount">The maximum number of bytes to dequeue.</param>
+            <returns>The number of dequeued bytes. This can be less than requested if no more bytes
+              are available.</returns>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.Peek(System.Int32)">
+            <summary>
+            Returns bytes at the beginning of the buffer without removing them.
+            </summary>
+            <param name="maxCount">The maximum number of bytes to peek.</param>
+            <returns>The bytes at the beginning of the buffer. This can be fewer than requested if
+              no more bytes are available.</returns>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.DequeueAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Removes and returns bytes at the beginning of the buffer. Waits asynchronously until
+            <paramref name="count"/> bytes are available.
+            </summary>
+            <param name="count">The number of bytes to dequeue.</param>
+            <param name="cancellationToken">A cancellation token used to propagate notification that
+              this operation should be canceled.</param>
+            <returns>The bytes at the beginning of the buffer.</returns>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.DequeueAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Removes and returns bytes at the beginning of the buffer. Waits asynchronously until
+            <paramref name="count"/> bytes are available.
+            </summary>
+            <param name="buffer">The buffer to write the data to.</param>
+            <param name="offset">The offset in the <paramref name="buffer"/> to write to.</param>
+            <param name="count">The number of bytes to dequeue.</param>
+            <param name="cancellationToken">A cancellation token used to propagate notification that
+              this operation should be canceled.</param>
+            <returns>The bytes at the beginning of the buffer.</returns>
+        </member>
+        <member name="M:Unclassified.Util.ByteBuffer.WaitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Waits asynchronously until bytes are available.
+            </summary>
+            <param name="cancellationToken">A cancellation token used to propagate notification that
+              this operation should be canceled.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+    </members>
+</doc>

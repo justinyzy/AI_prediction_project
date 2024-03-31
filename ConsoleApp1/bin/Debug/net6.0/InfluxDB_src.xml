@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>InfluxDB_src</name>
+    </assembly>
+    <members>
+        <member name="T:InfluxDB_src.DB_Errs">
+            <summary>
+            InfluxDB error state.
+            </summary>
+        </member>
+        <member name="F:InfluxDB_src.DB_Errs.OK">
+            <summary>
+            OK.
+            </summary>
+        </member>
+        <member name="F:InfluxDB_src.DB_Errs.TokenErr">
+            <summary>
+            Token is wrong. Please check the token from InfluxDB Web UI.
+            </summary>
+        </member>
+        <member name="F:InfluxDB_src.DB_Errs.IPErr">
+            <summary>
+            IP of InfluxDB is wrong.
+            </summary>
+        </member>
+        <member name="F:InfluxDB_src.DB_Errs.WriteErr">
+            <summary>
+            Write process has error.
+            </summary>
+        </member>
+        <member name="F:InfluxDB_src.DB_Errs.WrongArg">
+            <summary>
+            Argument passed into method has some problem.
+            </summary>
+        </member>
+        <member name="T:InfluxDB_src.InfluxDB">
+            <summary>
+            InfluxDB class.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.IP">
+            <summary>
+            IP address of InfluxDB
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.Port">
+            <summary>
+            Port of InfluxDB
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.Token">
+            <summary>
+            Token of Bucket. Can be obtained on InfluxDB web UI.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.Organization">
+            <summary>
+            Organization name of InfluxDB.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.Bucket">
+            <summary>
+            Bucket name you want to write. Must exist in InfluxDB.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.Measurement">
+            <summary>
+            Name of your measurement. If not exist, new measurement will be created.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.Upload">
+            <summary>
+            Flag of upload data to InfluxDB. If set true, data received from ECB will be upload to InfluxDB.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.SlotTitle">
+            <summary>
+            Name of acqusition module.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.ChTitle">
+            <summary>
+            Channel descriptions of module.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.influxDBClient">
+            <summary>
+            Clien object to communicate with InfluxDB.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.time">
+            <summary>
+            Start time of upload. This variable will be updated by <see cref="M:InfluxDB_src.InfluxDB.UpdateTime"/>.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.dataTicks">
+            <summary>
+            Ticks different between data points. This variable will be updated by <see cref="M:InfluxDB_src.InfluxDB.SetFs(System.UInt16)"/>.
+            </summary>
+        </member>
+        <member name="P:InfluxDB_src.InfluxDB.WriteTask">
+            <summary>
+            The task object of writing process.
+            </summary>
+        </member>
+        <member name="F:InfluxDB_src.InfluxDB.writeTcs">
+            <summary>
+            TCS of writing process. Used to prevent InfluxDB from writing by two process at the same time.
+            </summary>
+        </member>
+        <member name="F:InfluxDB_src.InfluxDB.writeTcsSyncObj">
+            <summary>
+            SYNC object of writing process. Used to avoid the critical section problem.
+            </summary>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.#ctor">
+            <summary>
+            Constructor of InfluxDB object.
+            </summary>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.ToJson">
+            <summary>
+            Convert the properties to JSON form which can make configuration export easily.
+            </summary>
+            <returns>JSON string.</returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.FromJson(System.Byte[])">
+            <summary>
+            Restore the properties from JSON string obtained from the configuration file.
+            </summary>
+            <param name="JsonBytes">JSON string from configuration file.</param>
+            <returns>Error status. Refer to <see cref="T:InfluxDB_src.DB_Errs"/></returns>
+        </member>
+        <member name="T:InfluxDB_src.InfluxDB.InfluxDBConverter">
+            <summary>
+            The class transform properties to JSON string.
+            </summary>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.InfluxDBConverter.#ctor(System.Object@)">
+            <summary>
+            Constructor of JSON converter.
+            </summary>
+            <param name="db"></param>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.InfluxDBConverter.CanConvert(System.Type)">
+            <summary>
+            Check the type is transformable or not.
+            </summary>
+            <param name="typeToConvert">Type wants to check</param>
+            <returns>True for transformable.</returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.InfluxDBConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="typeToConvert"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.InfluxDBConverter.Write(System.Text.Json.Utf8JsonWriter,InfluxDB_src.InfluxDB,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            transform the properties to JSON string. When calling JsonSerializer.Serialize, this method will be executed.
+            </summary>
+            <param name="writer"></param>
+            <param name="db">object wants to transform</param>
+            <param name="options"></param>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.Connect">
+            <summary>
+            Connect the InfluxDB.
+            </summary>
+            <returns>Error status. Refer to <see cref="T:InfluxDB_src.DB_Errs"/></returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.UpdateTime">
+            <summary>
+            Update the start upload time. This method must be called before ECB starts acquisition.
+            </summary>
+            <returns>Error status. Refer to <see cref="T:InfluxDB_src.DB_Errs"/></returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.SetFs(System.UInt16)">
+            <summary>
+            Set the sampling frequency of module. This method must be called before ECB starts acuisition.
+            </summary>
+            <param name="Fs">Sampling frequency of module.</param>
+            <returns>Error status. Refer to <see cref="T:InfluxDB_src.DB_Errs"/></returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.Write(System.Double[0:,0:])">
+            <summary>
+            Write data to InfluxDB.
+            </summary>
+            <param name="data">Data want to upload to InfluxDB.</param>
+            <returns>Error status. Refer to <see cref="T:InfluxDB_src.DB_Errs"/></returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.WriteAsyn(System.Double[0:,0:])">
+            <summary>
+            Async task of write. Task will be created in <see cref="M:InfluxDB_src.InfluxDB.Write(System.Double[0:,0:])"/> and executed in background.
+            </summary>
+            <param name="data">Data want to upload to InfluxDB.</param>
+            <returns>Error status. Refer to <see cref="T:InfluxDB_src.DB_Errs"/></returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.Reset(System.Threading.Tasks.TaskCompletionSource{System.Boolean}@)">
+            <summary>
+            Reset the task completion source. Must be called within the lock of <see cref="F:InfluxDB_src.InfluxDB.writeTcsSyncObj"/>
+            </summary>
+            <param name="tcs">TCS you want to reset</param>
+            <returns>New TCS</returns>
+        </member>
+        <member name="M:InfluxDB_src.InfluxDB.Set(System.Threading.Tasks.TaskCompletionSource{System.Boolean})">
+            <summary>
+            Set the result of TCS. Must be called within the lock of <see cref="F:InfluxDB_src.InfluxDB.writeTcsSyncObj"/>
+            </summary>
+            <param name="tcs">TCS you want to set</param>
+        </member>
+    </members>
+</doc>

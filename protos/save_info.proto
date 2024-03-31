@@ -1,0 +1,13 @@
+syntax = "proto2";
+package protos;
+
+message Save_info {
+    // Dir to save the file 
+    required string save_dir    = 1;
+
+    // Name to save the file
+    required string save_name   = 2;
+
+    // Whether save the image result
+    required bool save_img_b    = 3;
+}

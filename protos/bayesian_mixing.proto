@@ -1,0 +1,128 @@
+syntax = "proto2";
+package protos;
+
+import "protos/SVR_h_d.proto";
+
+message MAIN_bay {
+    // Setting for svr model.
+    required MAIN svr_info = 1;
+
+    // Setting for bayesian kenel mixing.
+    required Bay_main bayesian_info = 2;
+}
+
+message Bay_main {
+    // Range of percentage of linear kenel (Notice that rbf would be [1 - linear %])
+    required float_range range_linear_percent   = 1;
+
+    // Range of c penalty
+    required float_range range_c_penalty        = 2;
+
+    // Range of epsilon
+    required float_range range_epsilon          = 3;
+
+    // Range of rbf gamma
+    required float_range range_rbf_gamma        = 4;
+
+    // Range of tsne down sample
+    optional int_range range_tsne_f             = 10;
+
+    // Range of pca down sample
+    optional int_range range_pca_f              = 5;
+
+    // Range of matern nu
+    optional float_range range_matern_nu       = 14;
+
+    // Range of matern l
+    optional float_range range_matern_l        = 15;
+
+    // Time of bay opt
+    required int32 bay_times                    = 6 [default = 50];
+
+    // Path to save bay result
+    required string bay_save_p                  = 7;
+
+    // Set target error
+    required error_select error_info            = 8;
+
+    // Whetaher to add gaussian noise on eva data
+    optional gaussian_noise eva_noise_info     = 9;
+
+    // While remix with the poly kernel but linear, once set
+    // degree to 0 result is equal to remix with linear kernel.
+    optional Poly_info poly_info = 11;
+
+    // While only use the linear kernal
+    required bool linear_only_act = 12 [default = false];
+
+    // While only use the rbf kenal
+    required bool rbf_only_act = 13 [default = false];
+
+}
+
+message Poly_info{
+    // range for gamma of poly kernel
+    required float_range range_poly_gamma   = 1;
+
+    // range for bias of poly kernel
+    required float_range range_poly_cons    = 2;
+
+    // range for degree of poly kernel
+    required int_range range_poly_degree  = 3;
+
+    // range for gamma of rbf kernel
+    required float_range range_rbf_gamma    = 4;
+
+    // range for percent of poly kernel
+    required float_range range_poly_percent = 5;
+}
+
+message error_select{
+    // Consider avg error
+    required bool avg_error_bool  = 1;
+
+    // Consider max error
+    required bool max_error_bool  = 2;
+
+    // Consider error between train and eva set
+    required bool delta_error_bool  = 3;
+
+    // Error betweeen
+    required bool avg_max_delta_bool = 4;
+
+    // Consider train error
+    required bool avg_t_err_bool = 5 [default = false];
+
+    required bool max_t_err_bool = 6 [default = false];
+    
+}
+
+message float_range {
+    // Min value bound
+    required float min = 1;
+
+    // Max value bound
+    required float max = 2;
+}
+
+message int_range {
+    // Min value bound
+    required int32 min = 1;
+
+    // Max value bound
+    required int32 max = 2;
+}
+
+message gaussian_noise {
+    // Mean of gaussian distribution
+    required float noise_mean = 1 [default = 0.0];
+
+    // Variance of gaussian distribution
+    required float noise_var  = 2 [default = 0.1]; 
+
+    // Apply on feature
+    required bool act_feature = 3 [default = false];
+
+    // Apply on label
+    required bool act_label   = 4 [default = false];
+}

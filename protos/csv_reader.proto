@@ -1,0 +1,33 @@
+syntax = "proto2";
+package protos;
+
+message CSV_Reader{
+    // Path to csv file as trainig set.
+    required string train_csv_path        = 1 [default = './'];
+
+    // Path to csv file as testing set.
+    required string test_csv_path         = 2 [default = './'];
+
+    // Path to csv file as evaluation set
+    required string eva_csv_path          = 9 [default = './'];
+
+    // List of csv key as train feature
+    repeated string feature_key     = 3;
+
+    // List of csv key as label
+    repeated string label_key       = 4;
+
+    // random key seed (Once user want to set the 
+    // different times of data seperate result is
+    // the same.) Should be int.
+    optional int32 random_seed      = 5;
+
+    // Use when seperate the whole csv data to train and test dataset.
+    // This value stands for the perect of data to be testing set
+    optional float test_ratio       = 6;
+
+    // Use when getting a batch of data from the dataset.
+    // This valuse stands for the amout of data in a batch.
+    optional float batch_size       = 8 [default = 1];
+
+}

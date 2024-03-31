@@ -1,0 +1,20 @@
+syntax = "proto2";
+package protos;
+
+message Spindle_bay_report{
+    required SBI Spindle_bay_info = 1;
+}
+
+message SBI {
+    // Set for the root dir of the bay opt
+    required string root_dir = 1;
+
+    // Set for save_name
+    required string save_name = 2;
+
+    // Set for report name of each dir
+    required string report_name = 3;
+
+    // Ori report feature_key
+    repeated string ori_feature_key = 4;
+}

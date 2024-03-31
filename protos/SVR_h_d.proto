@@ -1,0 +1,153 @@
+syntax = "proto2";
+package protos;
+
+import "protos/csv_reader.proto";
+import "protos/model_input.proto";
+
+message MAIN {
+    // Info for applying SVR on heat and deformation.
+    optional SVR_H_D svr_hd_info = 1;
+}
+
+message SVR_H_D {
+    // Set for model
+    required SVR_model model_info   = 1;
+
+    // Set for data set
+    required CSV_Reader csv_info    = 2;
+
+    // Set for model_input
+    required Model_input input_info = 3;
+}
+
+message SVR_model {
+    // Ser for kernel
+    required Kernel kernel_info = 1;
+    
+    // Tolerence for early stop
+    required float tol = 2 [default = 0.001];
+
+    // Regularization parameter. The strenght of the regularization is 
+    // inversely proportional to C.
+    required float c_penalty = 3 [default = 1.0];
+
+    // Epsilon tube width.
+    required float epsilon = 4 [default = 0.1];
+
+    // Max training steps will be executer even tol not reach.
+    // Once set as -1, there is no limit.
+    required int32 max_iter = 5 [default = -1];
+}
+
+
+
+message Kernel{
+    // Setting for linear kernel
+    optional Linear_kernel linear_kernel = 1;
+
+    // Setting for poly kernel
+    optional Poly_kernel poly_kernel= 2;
+
+    // Setting for rbf kernel
+    optional Rbf_kernel rbf_kernel = 3;
+
+    // Setting for sigmoid kernel
+    optional Sigmoid_kernel sigmoid_kernel = 4;
+
+    // This is a self define kernel.
+    optional Linear_rbf linear_rbf = 5;
+
+    // This is a self define kernel
+    optional Poly_rbf poly_rbf = 6;
+
+    // Setting for matern kernel
+    optional Matern_kernel matern_kernel = 7;
+}
+
+message Matern_kernel {
+    // Setting for length scale
+    required float length_scale = 1;
+
+    // Setting for nu
+    required float nu = 2;
+}
+
+message svr_gamma {
+    // cal_gamma: scale: 1/(n_features * V.var())
+    // cal_gamma: auto: 1/n_features
+    // var_gamma: flaot varaible as gamma. 
+    //      To activate var_gamma cal_gamma should be "NONE"
+
+    // To set gamma as data driven.
+    required string cal_gamma = 1 [default = "scale"];
+
+    // To direct apply a variable for gamma.
+    optional float var_gamma = 2;
+}
+
+message Linear_kernel {
+    // K(a, b) = a^T * b
+    // Notihing specific need to set.
+}
+
+message Poly_kernel {
+    // K(a, b) = (gamma a^t * b + cons)^degree
+
+    // Degree of the poly kernel.
+    required int32 degree = 1  [default = 3] ;
+
+    // Kernel coefficient 
+    required svr_gamma gamma = 2;
+
+    // Constant term for poly kernel
+    required float cons = 3 [default = 0];
+}
+
+message Rbf_kernel {
+    // K(a, b) = exp(-gamma||a-b||^2)
+
+    // Kernel coefficient 
+    required svr_gamma gamma = 1;
+}
+
+message Sigmoid_kernel {
+    // K(a, b) = tanh(gamma*a^T + cons)
+
+    // Kernel coefficient 
+    required svr_gamma gamma = 1;
+
+    // Constant term for sigmoid kernel
+    required float cons = 2 [default = 0];
+}
+
+message Linear_rbf {
+    // Coeff of linear kernel weight 
+    required float coeff_linear = 1 [default = 1];
+
+    // Coeff of rbf kernel weight
+    // Now shold be 1 - coeff_linear, and coeff_linear should
+    // between 0 and 1.
+    // reserved float coeff_rbf = 2; 
+
+    // Gamma of rbg
+    required svr_gamma gamma_rbf = 3;
+}
+
+message Poly_rbf {
+    // Setting for mixing kernel rbf and poly
+
+    // Degree of the poly kernel
+    required int32 poly_degree = 1;
+
+    // Gamma of the poly kernel
+    required svr_gamma gamma_poly = 2;
+
+    // Const of the poly kernel
+    required float poly_cons = 3;
+
+    // Gamma of the rbf kernel
+    required svr_gamma gamma_rbf = 4;
+
+    // Coffef of poly kernel weight 
+    required float coeff_poly = 5;
+}

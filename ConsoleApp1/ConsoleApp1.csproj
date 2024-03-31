@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AsyncTcpClient">
+      <HintPath>..\..\ECB_API\AsyncTcpClient.dll</HintPath>
+    </Reference>
+    <Reference Include="ECB_src">
+      <HintPath>..\..\ECB_API\ECB_src.dll</HintPath>
+    </Reference>
+    <Reference Include="InfluxDB.Client">
+      <HintPath>..\..\ECB_API\InfluxDB.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="InfluxDB.Client.Core">
+      <HintPath>..\..\ECB_API\InfluxDB.Client.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="InfluxDB_src">
+      <HintPath>..\..\ECB_API\InfluxDB_src.dll</HintPath>
+    </Reference>
+    <Reference Include="Logger">
+      <HintPath>..\..\ECB_API\Logger.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

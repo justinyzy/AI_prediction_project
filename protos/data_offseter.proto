@@ -1,0 +1,47 @@
+syntax = "proto2";
+package protos;
+
+import "protos/save_info.proto";
+
+message Mina_Data_offseter {
+    required Data_offseter data_offseter = 1;
+}
+
+message Data_offseter {
+    // Set for the target data
+    required string target_csv_file    = 1;
+
+    // Set for target feature keys
+    repeated string target_f_list       = 2;
+
+    // Set for the trail apped key for saving feature.
+    repeated string s_tail_list         = 3;
+
+    // Info for the offset target setting 
+    required Offset_method offset_info  = 4;
+
+    // Save file path (path + name + .csv)
+    required Save_info save_info        = 5;
+}
+
+message Offset_method {
+    // Set for init offset method (Ex: init temp offset)
+    optional Init_offset init_offset_info       = 1;
+
+    // Set for the specicifi feature offset (EX: env offset)
+    optional Feature_offset feature_offset_info = 2;
+}
+
+message Init_offset {
+    // init target feature list 
+    repeated string tar_f_list      = 1;
+
+    // init feature index list [1, 100] means before 100 use 1 to init afeter
+    // 100 init with 100.
+    repeated int32 init_index_list  = 2;
+}
+
+message Feature_offset {
+    // Set for the list of init target feature
+    repeated string tar_f_list      = 1;
+}

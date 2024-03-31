@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "N/eFeU0nCq4j4/yWvyGj1QCO3O+PZC/EZL13YtsYaViTGDlxLNd3FGDz12VzFjK4qR2d/OXdQV+vgXZWrypYGQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\justi\\Desktop\\專題py\\Undergraduate_Project_Python_Script\\Python_Script\\ConsoleApp1\\ConsoleApp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\justi\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

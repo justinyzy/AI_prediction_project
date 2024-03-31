@@ -1,0 +1,6 @@
+29.11.2023 11:54:14: Info [line: 193 <RunAsync>d__61 -> MoveNext()]: Connecting to server
+29.11.2023 11:54:14: Info [line: 213 <<RunAsync>b__44_1>d -> MoveNext()]: TCP client is connected.
+29.11.2023 11:54:14: Info [line: 296 ECB -> Connect()]: ECB is connected.
+29.11.2023 11:54:14: Info [line: 919 ECB -> OnReceivedPackAsync()]: Bridge info is read.
+29.11.2023 11:54:15: Info [line: 940 ECB -> OnReceivedPackAsync()]: ADC info is read.
+29.11.2023 11:54:15: Info [line: 926 ECB -> OnReceivedPackAsync()]: TC info is read.

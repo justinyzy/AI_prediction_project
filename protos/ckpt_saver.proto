@@ -1,0 +1,14 @@
+syntax = "proto2";
+package protos;
+
+message CKPT_saver{
+    // Root path for saving
+    required string ckpt_path   = 1 [default="./00_ckpt/"];
+
+    // Folder name to save training result this folder will
+    // be create in the ckpt_path
+    required string ckpt_floder = 2;
+
+    //The header name of ckpt file 
+    required string ckpt_head   = 3 [default="model.ckpt"];
+}

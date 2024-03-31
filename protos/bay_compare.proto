@@ -1,0 +1,10 @@
+syntax = "proto2";
+package protos;
+
+message MAIN_bay_com {
+    // bayesian_mixing config file list.
+    repeated string config_list = 1;
+
+    // Dir to save the compare result.
+    required string save_dir = 2;
+}

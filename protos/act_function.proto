@@ -1,0 +1,62 @@
+syntax = "proto2";
+package protos;
+
+//[relu, sigmoid, selu, hard_limit]
+
+message Act_func{
+    optional RELU relu              = 1;
+
+    optional Leaky_relu leaky_relu  = 2;
+
+    optional Sigmoid sigmoid        = 3;
+
+    optional Tanh tanh              = 4;
+
+    optional Gaussian gaussian      = 5;
+
+    optional Piecewise piecewise    = 6;
+
+    optional Relu6 relu6            = 7;
+
+    optional Silu silu              = 8;
+}
+
+message RELU {
+    // None of para need to be set    
+}
+
+message Leaky_relu {
+    required float alpha = 1 [default=0.2];
+}
+
+message Sigmoid {
+    // None of para need to be set 
+}
+
+message Tanh {
+    // None of para need to be set
+}
+
+message Gaussian {
+    // f(v) = exp( -v^2 / 2*(sigma)^2 )
+
+    required float sigma = 1 [default=1];
+}
+
+message Piecewise {
+    // f(v) = 1, if v > upper
+    // f(v) = slope * v, if lower < v < upper
+    // f(v) = 0, if v < lower
+
+    required float lower = 1 [default = 0];
+
+    required float upper = 2 [default = 6];
+}
+
+message Relu6 {
+    // None of para need to be set
+}
+
+message Silu {
+    required float beta = 1 [default = 1.0];
+}

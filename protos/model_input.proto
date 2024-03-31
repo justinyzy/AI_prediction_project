@@ -1,0 +1,88 @@
+syntax = "proto2";
+package protos;
+
+message Model_input {
+    // Perform pca on temperature data
+    optional int32 pca_temp     = 1;
+
+    // Standardlize feature
+    required bool std_feature   = 2 [default = false];
+
+    // Standardlize label 
+    required bool std_label     = 3 [default = false];
+
+    // Apply moving average on label
+    required bool mv_label      = 4 [default = false];
+
+    // Once user wants to apply moving average on temp feature.
+    required bool mv_temp       = 5 [default = false];
+
+    // Window size for moving average
+    required int32 mv_coef      = 6 [default = 5];
+
+    // Perform tsne on temperature data
+    // 1/11 temp: Direct done with whole data
+    optional int32 tsne_temp    = 7;
+
+    // Perform parametric tsne on temperature data
+    optional P_tSNE parametric_tsne_temp = 8;
+
+    // Apply the data shuffle fucntion on train data or not
+    required bool shuffle_bool = 9 [default = false];
+
+    // Apply batch mean offset
+    required bool batch_offset_bool = 10 [default = false];
+}
+
+message P_tSNE{
+    // Degrees of dimensions target
+    required int32 tar_num          = 1;
+
+    // Iteration time
+    required int32 iter_times       = 2;
+
+    // Batch size
+    required int32 batch_num        = 3;
+
+    // Wheather reuse parametric tsne model from sepcific dir
+    optional string restore_path    = 4;
+
+    // Wheather user want to fit T-SNE with label
+    required bool bool_fit_lab      = 5 [default=false];
+
+    // Wheathre user want to fit T-SNE and remain origin data.
+    required bool bool_remain_ori_F = 6 [default=false];
+
+    // Smoothing coef (Force the p t-SNE make a smoothing result)
+    required float smoothing_var_coef = 7 [default = 0.0];
+
+    // While want to activate with leaky relu
+    required bool bool_leaky_rely = 8 [default = false];
+
+    // Once user want to let p t-SNE lear specific data not
+    // the lable what svr using (such as learn about filt res)
+    // this only work while bool_fit_lab is set as true.
+    optional string specific_label = 9;
+
+    // Once user want to let p t-SNE learn specifict data not
+    // the feature what svr using (such as learn LP Temp)
+    optional string_list specific_feature = 10;
+
+    // While user just want result with specific feature don't want
+    // to check features don't have temp key in feature name.``
+    required bool bool_kill_OF = 11 [default = false];
+
+    // Specific a csv file for training the p tsne TL model
+    optional string specific_file = 12;
+    
+
+    // Set for which GPU to apply model training.
+    required string GPU_code = 13 [default = "1"];
+
+    // Set for the fraction of memory on the GPU could use.
+    required float GPU_fraction = 14 [default = 0.1];
+}
+
+message string_list {
+    repeated string keys = 1;
+}
