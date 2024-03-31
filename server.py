@@ -3,7 +3,7 @@ import pickle
 
 def connect_server():
 # IP & port number
-    server_ip = '192.168.0.1'
+    server_ip = '192.168.0.110'
     server_port = 5001
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

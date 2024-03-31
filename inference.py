@@ -58,6 +58,9 @@ def main(args,data_in,client_socket):
         print("Send data to Client.")
         print("")
 
+    inf_res=["STOP"]
+    server.send_data(client_socket,inf_res)
+
 if __name__ == "__main__":
     data = pd.read_csv("result.csv")  #### read csv as dataframe
     print("Load data sucess.")
